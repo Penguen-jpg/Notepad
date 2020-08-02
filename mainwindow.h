@@ -38,10 +38,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QTimer *timer;//計時器
-    QString path;//檔案路徑
-    Form *form;//備忘錄的格式
+    Form *forms[100];//備忘錄(上限為100個)
+    QString path[100];//檔案路徑(對應不同的form)
     //快捷鍵(對應的動作要是slot)
     QAction *action1;
-    bool isSaved[100]={false};//紀錄是否已儲存過
+    bool isSaved[100];//紀錄是否已儲存過
 };
 #endif // MAINWINDOW_H
