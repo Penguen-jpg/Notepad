@@ -19,6 +19,7 @@
  * 3.開啟多個tab會導致儲存到錯誤的tab
  * 4.取消tab可移動的設定
  * 5.取消關閉儲存檔案視窗跳出的訊息
+ * 6.修正沒有tab的情況下儲存會使程式跳出
  */
 
 /*未來目標:
@@ -107,6 +108,11 @@ void MainWindow::on_action_2_triggered()//開啟舊檔
 
 void MainWindow::on_action_3_triggered()//另存新檔
 {
+    if(ui->tabWidget->count()==0)
+    {
+        QMessageBox::warning(this,"錯誤","目前沒有Tab可以儲存");
+        return;
+    }
     QString file_path=QFileDialog::getSaveFileName(this,"儲存檔案","新文字文件",tr("文字文件(*.txt);;所有檔案 (*.*)"));//取得路徑
     QFile file(file_path);//建立QFile
     path[ui->tabWidget->currentIndex()]=file_path;//指定路徑
