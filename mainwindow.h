@@ -40,8 +40,8 @@ private:
     QTimer *timer;//計時器
     QString path;//檔案路徑
     Form *form;//備忘錄的格式
-    int last_index;//紀錄上一個index
     //快捷鍵(對應的動作要是slot)
     QAction *action1;
+    bool isSaved[100]={false};//紀錄是否已儲存過
 };
 #endif // MAINWINDOW_H
