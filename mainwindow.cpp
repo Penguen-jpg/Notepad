@@ -108,7 +108,7 @@ void MainWindow::on_action_2_triggered()//開啟舊檔
 
 void MainWindow::on_action_3_triggered()//另存新檔
 {
-    if(ui->tabWidget->count()==0)
+    if(ui->tabWidget->count()==0)//若目前沒有tab，則無法儲存
     {
         QMessageBox::warning(this,"錯誤","目前沒有Tab可以儲存");
         return;
@@ -116,9 +116,8 @@ void MainWindow::on_action_3_triggered()//另存新檔
     QString file_path=QFileDialog::getSaveFileName(this,"儲存檔案","新文字文件",tr("文字文件(*.txt);;所有檔案 (*.*)"));//取得路徑
     QFile file(file_path);//建立QFile
     path[ui->tabWidget->currentIndex()]=file_path;//指定路徑
-    if(!file.open(QFile::WriteOnly|QFile::Text))//如果無法開檔，則跳出訊息
+    if(!file.open(QFile::WriteOnly|QFile::Text))//如果無法開檔或關閉視窗，則離開
     {
-      //  QMessageBox::warning(this,"錯誤","檔案儲存失敗");
         return;
     }
     QTextStream out(&file);//寫出用
@@ -138,9 +137,8 @@ void MainWindow::on_action_4_triggered()//儲存檔案
         return;
     }
     QFile file(path[ui->tabWidget->currentIndex()]);
-    if(!file.open(QFile::WriteOnly|QFile::Text))//如果無法開檔，則跳出訊息
+    if(!file.open(QFile::WriteOnly|QFile::Text))//如果無法開檔或關閉視窗，則離開
     {
-      //  QMessageBox::warning(this,"錯誤","檔案儲存失敗");
         return;
     }
     QTextStream out(&file);//寫出用
