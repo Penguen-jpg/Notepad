@@ -10,23 +10,23 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
-#include <QAction>
 #include <QTextCodec>
 #include <QDebug>
-/*第二版更新內容:
- * 1.變更判斷是否可以直接儲存的方式
- * 2.解決編碼問題(ANSI、UTF-8)
- * 3.開啟多個tab會導致儲存到錯誤的tab
- * 4.取消tab可移動的設定
- * 5.取消關閉儲存檔案視窗跳出的訊息
- * 6.修正沒有tab的情況下儲存會使程式跳出
+#include <QPrintDialog>
+#include <QPrinter>
+/* 第三版更新內容:
+ * 1.開啟舊檔後，可直接使用儲存功能儲存，不需用另存新檔
+ * 2.解決tab編號會重複的問題
+ * 3.新增列印功能
+ * 4.新增選單快捷鍵
  */
 
-/*未來目標:
- * 1.選單快捷鍵
- * 2.試試看做出closeEvent()
- * 3.試
- * 試看修正關閉對話框也會跳出訊息的問題
+/* 待解決:
+ * 1.顏色跟字型的資訊無法被存取起來，也就是儲存檔案後，開啟舊檔無法顯示原本改過的顏色跟字型(可能目前無法解決)
+ */
+
+/* 未來目標:
+ * 1.試試看做出closeEvent()
  */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -57,13 +57,18 @@ void MainWindow::show_timer()//顯示時間
 
 void MainWindow::newForm()//增加新的tab
 {
+    if(ui->tabWidget->count()==0)//如果沒有tab，則編號從1開始
+    {
+        counter=1;
+    }
     //初始化資料
     forms[ui->tabWidget->count()]=new Form(this);
     path[ui->tabWidget->count()]="";
     isSaved[ui->tabWidget->count()]=false;
     //建立tab
-    ui->tabWidget->addTab(forms[ui->tabWidget->count()],QString("Tab %0").arg(ui->tabWidget->count()+1));
+    ui->tabWidget->addTab(forms[ui->tabWidget->count()],QString("Tab %0").arg(counter));
     ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);//跳到新的tab
+    counter++;
 }
 
 
@@ -89,6 +94,7 @@ void MainWindow::on_action_triggered()//新增tab(用工具列)
 void MainWindow::on_action_2_triggered()//開啟舊檔
 {
     newForm(); //新增新的備忘錄
+    isSaved[ui->tabWidget->count()-1]=true;//標記為儲存過
     QString file_path=QFileDialog::getOpenFileName(this,"開啟檔案","",tr("文字文件(*.txt);;所有檔案 (*.*)"));//取得路徑
     QFile file(file_path);
     path[ui->tabWidget->count()-1]=file_path;//指定路徑
@@ -147,4 +153,22 @@ void MainWindow::on_action_4_triggered()//儲存檔案
     out<<text;//寫出
     file.flush();//清空緩存區
     file.close();//關檔
+}
+
+void MainWindow::on_action_6_triggered()//列印內容
+{
+    if(ui->tabWidget->count()==0)//若目前沒有tab，則無法列印
+    {
+        QMessageBox::warning(this,"錯誤","目前沒有tab可以列印");
+        return;
+    }
+    //建立Printer及Dialog
+    QPrinter printer;
+    printer.setPrinterName("Printer");
+    QPrintDialog dialog(&printer,this);
+    if(dialog.exec()==QDialog::Rejected)//若沒有要印，則跳出
+    {
+        return;
+    }
+    forms[ui->tabWidget->currentIndex()]->text->print(&printer);//印出內容
 }

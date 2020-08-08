@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QAction>
+#include <QFont>
+#include <QColor>
 namespace Ui {
 class Form;
 }
@@ -14,6 +16,8 @@ class Form : public QWidget
 
 public:
     QTextEdit *text;//備忘錄
+    QFont font;//字型
+    QColor color;//顏色
     explicit Form(QWidget *parent = nullptr);
     ~Form();
 

@@ -35,6 +35,8 @@ private slots:
 
     void on_action_4_triggered();
 
+    void on_action_6_triggered();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;//計時器
@@ -43,5 +45,6 @@ private:
     //快捷鍵(對應的動作要是slot)
     QAction *action1;
     bool isSaved[100];//紀錄是否已儲存過
+    int counter;
 };
 #endif // MAINWINDOW_H

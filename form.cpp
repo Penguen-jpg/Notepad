@@ -34,7 +34,7 @@ Form::~Form()
 void Form::change_font()//更改字型
 {
     bool ok;
-    QFont font=QFontDialog::getFont(&ok,this);
+    font=QFontDialog::getFont(&ok,this);
     if(ok)
     {
         text->setFont(font);
@@ -43,7 +43,7 @@ void Form::change_font()//更改字型
 
 void Form::change_color()//更改顏色
 {
-    QColor color=QColorDialog::getColor(Qt::white,this,"選擇顏色");
+    color=QColorDialog::getColor(Qt::white,this,"選擇顏色");
     if(color.isValid())
     {
         text->setTextColor(color);
